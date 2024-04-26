@@ -46,18 +46,19 @@ PS C:\Users\user\Downloads\Part 2> java Session
 
 ## Contributing
 
-If you are willing to work on this project, then please feel free to follow the steps below to ensure your 
-Fork the repository
+If you are willing to work on this project, then please feel free to follow the steps below to ensure your efforts are recognised.
 
-Create a new branch (git checkout -b feature)
+1) Fork the repository
 
-Make your changes
+2) Create a new branch (git checkout -b feature)
 
-Commit your changes (git commit -am 'Add new feature')
+3) Make your changes
 
-Push to the branch (git push origin feature)
+4) Commit your changes (git commit -am 'Add new feature')
 
-Create a new Pull Request
+5) Push to the branch (git push origin feature)
+
+6) Create a new Pull Request
 
 
 
