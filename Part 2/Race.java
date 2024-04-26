@@ -1,5 +1,9 @@
+import javax.swing.*;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.lang.Math;
 
 /**
  * A three-horse race, each horse running in its own lane
@@ -9,10 +13,14 @@ import java.lang.Math;
  * @version 1.1
  */
 public class Race {
-    private final int raceLength;
-    private Horse lane1Horse;
-    private Horse lane2Horse;
-    private Horse lane3Horse;
+    public final int raceLength;
+    public final int totalLanes;
+    public int terrain = 0;
+    public double terrainMultiplier = 0.3;
+    public List<Horse> horses = new ArrayList<>();
+    public ArrayList<Horse> winningHorses = new ArrayList<>();
+    public List<List<Object>> statistics = new ArrayList<>();
+    public JTextArea textArea;
 
     /**
      * Constructor for objects of class Race
