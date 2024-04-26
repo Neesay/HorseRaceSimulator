@@ -10,6 +10,7 @@ A horse racing simulator with a GUI that includes betting system and customisati
 
 ## Installation
 This project can be dwonloaded from here: https://github.com/Neesay/HorseRaceSimulator
+
 Download the latest Java Development Kit from here to run these files: https://www.oracle.com/uk/java/technologies/downloads/
 
 ### Steps
