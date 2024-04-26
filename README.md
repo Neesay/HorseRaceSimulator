@@ -10,10 +10,26 @@ A horse racing simulator with a GUI that includes betting system and customisati
 
 ## Installation
 This project can be dwonloaded from here: https://github.com/Neesay/HorseRaceSimulator
+Download the latest Java Development Kit from here to run these files: https://www.oracle.com/uk/java/technologies/downloads/
 
-Then extracting the .zip folder into a suitable location. 
+### Steps
+Extract the .zip folder into a suitable location. 
 
-Then opening up the folder within the terminal, like this:
+Open up the folder within the terminal, like this:
 ```bash
-C: 
+PS C: \Users\<your_username>> cd <path>
+PS C:\Users\user\Downloads\Part 2>
 ```
+Then compressing Horse.java, Race.java and Session.java files to .class files in the same directory, using "javac" like this:
+```bash
+PS C:\Users\user\Downloads\Part 2> javac Horse.java
+PS C:\Users\user\Downloads\Part 2> javac Race.java
+PS C:\Users\user\Downloads\Part 2> javac Session.java
+PS C:\Users\user\Downloads\Part 2>
+```
+The program can then be run by doing "java Session" in the same folder:
+```bash
+PS C:\Users\user\Downloads\Part 2> java Session 
+```
+
+## Usage
