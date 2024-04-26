@@ -26,8 +26,9 @@ public class Horse {
     /**
      * Constructor for objects of class Horse
      */
-    public Horse(char horseSymbol, String horseName, double horseConfidence) {
+    public Horse(String horseSymbol, String[] horseBody, String horseName, double horseConfidence) {
         this.horseSymbol = horseSymbol;
+        this.horseBody = horseBody;
         this.horseName = horseName;
         if (horseConfidence >= 0 && horseConfidence <= 1) {
             this.horseConfidence = horseConfidence;
@@ -35,74 +36,49 @@ public class Horse {
             this.horseConfidence = 0.5;
         }
     }
-    
+
     //Other methods of class Horse
-    /**
-     * Makes the horse fall
-     */
     public void fall() {
         this.horseFallen = true;
     }
 
-    /**
-     * Returns the value of the horse's confidence
-     * @return horseConfidence
-     */
     public double getConfidence() {
         return this.horseConfidence;
     }
 
-    /**
-     * Returns the value of distance travelled by the horse
-     * @return distanceTravelled
-     */
     public int getDistanceTravelled() {
         return this.distanceTravelled;
     }
 
-    /**
-     * Returns the name of the horse
-     * @return horseName
-     */
     public String getName() {
         return this.horseName;
     }
 
-    /**
-     * Returns the horse's symbol
-     * @return horseSymbol
-     */
-    public char getSymbol() {
+    public void setName(String new_name) {
+        this.horseName = new_name;
+    }
+
+    public String getSymbol() {
         return this.horseSymbol;
     }
 
-    /**
-     * Makes the horse have zero distance travelled
-     */
+    public String[] getBody() {
+        return this.horseBody;
+    }
+
     public void goBackToStart() {
         this.horseFallen = false;
         this.distanceTravelled = 0;
     }
 
-    /**
-     * Returns the boolean value if the horse fell or not
-     * @return horseFallen
-     */
     public boolean hasFallen() {
         return this.horseFallen;
     }
 
-    /**
-     * Increments the horse's distance travelled by 1
-     */
     public void moveForward() {
         this.distanceTravelled++;
     }
 
-    /**
-     * Sets a new value of the horse's confidence
-     * @param newConfidence
-     */
     public void setConfidence(double newConfidence) {
         if (newConfidence >= 0 && newConfidence <= 1) {
             this.horseConfidence = newConfidence;
@@ -111,11 +87,7 @@ public class Horse {
         }
     }
 
-    /**
-     * Sets a nw value of the horse's symbol
-     * @param newSymbol
-     */
-    public void setSymbol(char newSymbol) {
+    public void setSymbol(String newSymbol) {
         this.horseSymbol = newSymbol;
     }
 }
