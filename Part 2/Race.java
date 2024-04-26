@@ -166,25 +166,34 @@ public class Race {
      * @param theHorse the horse to be moved
      */
     private void moveHorse(Horse theHorse) {
-        //if the horse has fallen it cannot move, 
-        //so only run if it has not fallen
-        
-        if  (!theHorse.hasFallen()) {
-            //the probability that the horse will move forward depends on the confidence;
-            if (Math.random() < theHorse.getConfidence()) {
-               theHorse.moveForward();
+        //if the horse has fallen it cannot move,
+        //so only run if it has not fallen yet
+        if (!theHorse.hasFallen()) {
+
+            //the probability that the horse will move forward depends on the confidence
+            if ((Math.random()*terrainMultiplier) < theHorse.getConfidence()) {
+                theHorse.moveForward();
             }
-            
-            //the probability that the horse will fall is very small (max is 0.1)
-            //but will also will depends exponentially on confidence 
-            //so if you double the confidence, the probability that it will fall is *2
-            if (Math.random() < (0.1*theHorse.getConfidence()*theHorse.getConfidence())) {
+
+            //calculating probability if the horse will fall or not using exponential equation
+            double z = (double) 1 /raceLength;
+            double o = 1 - theHorse.getConfidence();
+            double x1 = Math.random();
+            double y1 = Math.random();
+            double y  = Math.pow(Math.E, (o * 2.5 * z * x1)) - 1;
+
+            if (y1 < y) {
                 theHorse.fall();
+
+                // Setting new confidence level
+                if (theHorse.getConfidence() > 0.1) {
+                    theHorse.setConfidence(theHorse.getConfidence() - 0.05);
+                }
             }
         }
     }
-        
-    /** 
+
+    /**
      * Determines if a horse has won the race
      *
      * @param theHorse The horse we are testing
@@ -192,33 +201,46 @@ public class Race {
      */
     private boolean raceWonBy(Horse theHorse) {
         if (theHorse.getDistanceTravelled() == raceLength) {
+            if (theHorse.getConfidence() < 1) {
+                theHorse.setConfidence(theHorse.getConfidence() + 0.05);
+            }
             return true;
         }
-        else {
-            return false;
-        }
+        return false;
     }
-    
+
     /***
      * Print the race on the terminal
      */
     private void printRace() {
-        System.out.print('\u000C');  //clear the terminal window
-        
-        multiplePrint('=',raceLength+3); //top edge of track
-        System.out.println();
-        
-        printLane(lane1Horse);
-        System.out.println();
-        
-        printLane(lane2Horse);
-        System.out.println();
-        
-        printLane(lane3Horse);
-        System.out.println();
-        
-        multiplePrint('=',raceLength+3); //bottom edge of track
-        System.out.println();    
+        SwingUtilities.invokeLater(() -> {
+            int temp = horses.size();
+
+            textArea.append("");  //clear the terminal window
+
+            textArea.append(" ");
+            multiplePrint("=",raceLength+17); //top edge of track
+            textArea.append("\n");
+
+            for (Horse horse : horses) {
+                printLane(horse);
+                textArea.append("  " + horse.getName() + " (Current confidence: " + (long) (horse.getConfidence()*100) + "%)\n");
+
+
+                if (temp > 1) {
+                    textArea.append("|");
+                    multiplePrint("-", (int) (raceLength+17));
+                    textArea.append("|\n");
+                }
+                temp--;
+
+
+            }
+
+            textArea.append(" ");
+            multiplePrint("=",raceLength+17); //bottom edge of track
+            textArea.append("\n");
+        });
     }
     
     /**
