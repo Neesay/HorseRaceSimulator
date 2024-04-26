@@ -9,8 +9,14 @@
  * @version 1.0
  */
 public class Horse {
-    //Fields of class Horse
-    char horseSymbol;
+    String horseSymbol;
+    String[] horseBody;
+    int wins = 0;
+    int numRaces = 0;
+    double speed = 0;
+    int totalDistance = 0;
+    long totalTimeSpent = 0;
+    double winningProbability = 0.5;
     String horseName;
     double horseConfidence;
     boolean horseFallen = false;
