@@ -90,4 +90,73 @@ public class Horse {
     public void setSymbol(String newSymbol) {
         this.horseSymbol = newSymbol;
     }
+
+    public void setBody(String[] newBody) {
+        this.horseBody = newBody;
+    }
+
+    public void addWin() {
+        this.wins++;
+    }
+
+    public int getWins() {
+        return this.wins;
+    }
+
+    public void addRaces() {
+        this.numRaces++;
+    }
+
+    public int getNumRaces() {
+        return this.numRaces;
+    }
+
+    public void setSpeed(double new_speed) {
+        this.speed = new_speed;
+    }
+
+    public double getSpeed() {
+        return this.speed;
+    }
+
+    public void setTotalDistance(int new_totalDistance) {
+        this.totalDistance += new_totalDistance;
+    }
+
+    public void setProbability() {
+        this.winningProbability = (double) wins /numRaces;
+    }
+
+    public String getOddsString() {
+        if (winningProbability == 0) {
+            winningProbability = 0.05;
+        } else if (winningProbability == 1) {
+            winningProbability = 0.95;
+        }
+
+        String numerator = String.valueOf((winningProbability < 0) ? -1 * winningProbability : winningProbability).replace(".", "");
+        String denominator = String.valueOf((long) Math.pow(10, (winningProbability == (int) winningProbability) ? 1 : numerator.length() - 1));
+        long unreducedN = Long.parseLong(numerator);
+        long unreducedD = Long.parseLong(denominator);
+        long reducedN = unreducedN / GCD(unreducedN, unreducedD);
+        long reducedD = unreducedD / GCD(unreducedN, unreducedD);
+
+        return reducedN + " to " + (reducedD-reducedN);
+    }
+
+    public long GCD(long a, long b) {
+        return (b == 0) ? a : GCD(b, a % b);
+    }
+
+    public double calculateProfit(int moneyInvested) {
+        if (winningProbability == 0) {
+            winningProbability = 0.05;
+        } else if (winningProbability == 1) {
+            winningProbability = 0.95;
+        }
+
+        double odds = 1 / winningProbability;
+        double winnings = odds * moneyInvested;
+        return winnings - moneyInvested;
+    }
 }
