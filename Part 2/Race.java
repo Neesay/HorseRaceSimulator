@@ -28,84 +28,134 @@ public class Race {
      * 
      * @param distance the length of the racetrack (in metres/yards...)
      */
-    public Race(int distance) {
+    public Race(int distance, ArrayList<Horse> new_horses, int new_terrain, JTextArea new_textArea) {
         // initialise instance variables
         raceLength = distance;
-        lane1Horse = null;
-        lane2Horse = null;
-        lane3Horse = null;
+        this.totalLanes = new_horses.size();
+        horses = new_horses;
+        this.terrain = new_terrain;
+        this.textArea = new_textArea;
     }
-    
-    /**
-     * Adds a horse to the race in a given lane
-     * 
-     * @param theHorse the horse to be added to the race
-     * @param laneNumber the lane that the horse will be added to
-     */
-    public void addHorse(Horse theHorse, int laneNumber) {
-        if (laneNumber == 1) {
-            lane1Horse = theHorse;
-        }
-        else if (laneNumber == 2) {
-            lane2Horse = theHorse;
-        }
-        else if (laneNumber == 3) {
-            lane3Horse = theHorse;
-        }
-        else {
-            System.out.println("Cannot add horse to lane " + laneNumber + " because there is no such lane");
-        }
-    }
-    
+
     /**
      * Start the race
      * The horse are brought to the start and
-     * then repeatedly moved forward until the 
+     * then repeatedly moved forward until the
      * race is finished
      */
     public void startRace() {
-        //declare a local variable to tell us when the race is finished
-        boolean finished = false;
+        new Thread(() -> {
+            setTerrainMultiplier();
 
-        //declare local variable to store winning horse
-        Horse winningHorse;
-        
-        //reset all the lanes (all horses not fallen and back to 0). 
-        lane1Horse.goBackToStart();
-        lane2Horse.goBackToStart();
-        lane3Horse.goBackToStart();
-                      
-        while (!finished) {
-            //move each horse
-            moveHorse(lane1Horse);
-            moveHorse(lane2Horse);
-            moveHorse(lane3Horse);
-                        
-            //print the race positions
-            printRace();
-            
-            //if any of the three horses has won the race is finished
-            if ( raceWonBy(lane1Horse) || raceWonBy(lane2Horse) || raceWonBy(lane3Horse) ) {
-                finished = true;
+            // reset all the lanes (all horses not fallen and back to 0)
+            for (Horse horse : horses) {
+                horse.goBackToStart();
             }
-           
-            //wait for 100 milliseconds
-            try {
-                TimeUnit.MILLISECONDS.sleep(100);
-            } catch (Exception e){}
-        }
 
-        //find which horse won the race
-        if (raceWonBy(lane1Horse)) {
-            winningHorse = lane1Horse;
-        } else if (raceWonBy(lane2Horse)) {
-            winningHorse = lane2Horse;
-        } else {
-            winningHorse = lane3Horse;
-        }
+            long startTime = System.currentTimeMillis();
 
-        //print terminal message with the name of the winning horse
-        System.out.println("And the winner is " + winningHorse.getName());
+            ArrayList<Horse> fallenHorses = new ArrayList<>();
+
+            boolean finished = false;
+            while (!finished) {
+                // print the race positions
+                SwingUtilities.invokeLater(() -> {
+                    printRace();
+                    textArea.revalidate();
+                    textArea.repaint();
+                });
+
+                // move each horse
+                for (Horse horse : horses) {
+                    moveHorse(horse);
+                }
+
+                // loop to find any winning horses
+                for (Horse horse : horses) {
+                    if (raceWonBy(horse)) {
+                        winningHorses.add(horse);
+                    }
+                }
+
+                // if all horses fell
+                for (Horse horse : horses) {
+                    if (horse.hasFallen()) {
+                        if (!fallenHorses.contains(horse)) {
+                            long timeElapsed = System.currentTimeMillis() - startTime;
+                            horse.totalTimeSpent += timeElapsed;
+                            horse.totalDistance += horse.distanceTravelled;
+
+                            fallenHorses.add(horse);
+                        }
+                    }
+                }
+
+                if (fallenHorses.size() == horses.size()) {
+                    // print terminal message
+                    textArea.append("");
+                    textArea.append("All horses have fallen. There are no winners.\n");
+
+                    // end loop
+                    finished = true;
+                }
+
+                // if one, two or three horses win
+                if (winningHorses.size() == 1) {
+                    // print terminal message with the name of one winning horse
+                    textArea.append("");
+                    textArea.append("And the winner is " + winningHorses.getFirst().getName() + "\n");
+
+                    // end loop
+                    finished = true;
+                } else if (winningHorses.size() > 1) {
+                    // print terminal message with the name of two winning horses
+                    textArea.append("");
+                    textArea.append("And the winners are " + winningHorses.getFirst().getName());
+
+                    for (int i = 1; i < winningHorses.size(); i++) {
+                        if (i == winningHorses.size() - 1) {
+                            textArea.append(" and ");
+                        } else {
+                            textArea.append(", ");
+                        }
+                        textArea.append(winningHorses.get(i).getName());
+                    }
+                    textArea.append("\n");
+
+                    // end loop
+                    finished = true;
+                }
+
+                // wait for 100 milliseconds
+                try {
+                    TimeUnit.MILLISECONDS.sleep(350);
+                } catch (Exception ignored) {}
+
+                if (!finished) {
+                    SwingUtilities.invokeLater(() -> {
+                        textArea.setText("");
+                    });
+                }
+            }
+
+            for (Horse horse : winningHorses) {
+                horse.addWin();
+            }
+
+            for (Horse horse : horses) {
+                horse.addRaces();
+                horse.setProbability();
+                if (!fallenHorses.contains(horse)) {
+                    long timeElapsed = System.currentTimeMillis() - startTime;
+                    horse.totalTimeSpent += timeElapsed;
+                    horse.totalDistance += horse.distanceTravelled;
+
+                    fallenHorses.add(horse);
+                }
+            }
+
+            statistics.add(Collections.singletonList(winningHorses));
+        }).start();
     }
     
     /**
