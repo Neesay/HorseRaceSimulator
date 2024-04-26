@@ -254,26 +254,106 @@ public class Race {
         //and after the horse
         int spacesBefore = theHorse.getDistanceTravelled();
         int spacesAfter = raceLength - theHorse.getDistanceTravelled();
-        
-        //print a | for the beginning of the lane
-        System.out.print('|');
-        
-        //print the spaces before the horse
-        multiplePrint(' ',spacesBefore);
-        
-        //if the horse has fallen then print dead
-        //else print the horse's symbol
-        if(theHorse.hasFallen()) {
-            System.out.print('\u2322');
+
+        if (theHorse.hasFallen()) {
+            textArea.append("|");
+            multiplePrint(" ",spacesBefore);
+            textArea.append("                 ");
+            multiplePrint(" ",spacesAfter);
+            textArea.append("|\n");
+
+            textArea.append("|");
+            multiplePrint(" ",spacesBefore);
+            textArea.append("                 ");
+            multiplePrint(" ",spacesAfter);
+            textArea.append("|\n");
+
+            textArea.append("|");
+            multiplePrint(" ",spacesBefore);
+            textArea.append("                ");
+            multiplePrint(" ",spacesAfter+1);
+            textArea.append("|\n");
+
+            textArea.append("|");
+            multiplePrint(" ",spacesBefore);
+            textArea.append("            '~  ");
+            multiplePrint(" ",spacesAfter+1);
+            textArea.append("|\n");
+
+            textArea.append("|");
+            multiplePrint(" ",spacesBefore);
+            textArea.append("  .~.-.");
+            multiplePrint(theHorse.getBody()[1], 3);
+            textArea.append("./" + theHorse.getSymbol() + ")\\ ");
+            multiplePrint(" ",spacesAfter+1);
+            textArea.append("|\n");
+
+            textArea.append("|");
+            multiplePrint(" ",spacesBefore);
+            textArea.append(".~/(__.");
+            multiplePrint(theHorse.getBody()[0], 3);
+            textArea.append("_\"`_");
+            multiplePrint(theHorse.getBody()[1], 1);
+            textArea.append(")");
+            multiplePrint(" ",spacesAfter+1);
+            textArea.append("|");
         } else {
-            System.out.print(theHorse.getSymbol());
+            textArea.append("|");
+            multiplePrint(" ",spacesBefore);
+            textArea.append("            ~``  ");
+            multiplePrint(" ",spacesAfter);
+            textArea.append("|\n");
+
+            textArea.append("|");
+            multiplePrint(" ",spacesBefore);
+            textArea.append("  .~.-.");
+            multiplePrint(theHorse.getBody()[1], 3);
+            textArea.append(".` (" + theHorse.getSymbol() + "\\");
+            multiplePrint(" ",spacesAfter+1);
+            textArea.append("|\n");
+
+            textArea.append("|");
+            multiplePrint(" ",spacesBefore);
+            textArea.append(".//(` ");
+            multiplePrint(theHorse.getBody()[0], 6);
+            textArea.append(" ( `'");
+            multiplePrint(" ",spacesAfter);
+            textArea.append("|\n");
+
+            textArea.append("|");
+            multiplePrint(" ",spacesBefore);
+            textArea.append("~/  \\ ).");
+            multiplePrint(theHorse.getBody()[1], 2);
+            textArea.append(". )   ");
+            multiplePrint(" ",spacesAfter+1);
+            textArea.append("|\n");
+
+            if (isItOdd(theHorse.distanceTravelled)) {
+                textArea.append("|");
+                multiplePrint(" ",spacesBefore);
+                textArea.append("     <'\\ /._\\   ");
+                multiplePrint(" ",spacesAfter+1);
+                textArea.append("|\n");
+
+                textArea.append("|");
+                multiplePrint(" ",spacesBefore);
+                textArea.append("      ` /       ");
+                multiplePrint(" ",spacesAfter+1);
+                textArea.append("|");
+            } else {
+                textArea.append("|");
+                multiplePrint(" ",spacesBefore);
+                textArea.append("' <' `\\ ._/'\\   ");
+                multiplePrint(" ",spacesAfter+1);
+                textArea.append("|\n");
+
+                textArea.append("|");
+                multiplePrint(" ",spacesBefore);
+                textArea.append("   `   \\     \\  ");
+                multiplePrint(" ",spacesAfter+1);
+                textArea.append("|");
+            }
         }
-        
-        //print the spaces after the horse
-        multiplePrint(' ',spacesAfter);
-        
-        //print the | for the end of the track
-        System.out.print('|');
     }
         
     
@@ -283,11 +363,29 @@ public class Race {
      * 
      * @param aChar the character to Print
      */
-    private void multiplePrint(char aChar, int times) {
+    private void multiplePrint(String aChar, int times) {
         int i = 0;
         while (i < times) {
-            System.out.print(aChar);
+            textArea.append(aChar);
             i = i + 1;
+        }
+    }
+
+    private boolean isItOdd(int number) {
+        return number % 2 != 0;
+    }
+
+    public void setTerrainMultiplier() {
+        if (terrain == 0) {
+            terrainMultiplier = 0.55;
+        } else if (terrain == 1) {
+            terrainMultiplier = 0.65;
+        } else if (terrain == 2) {
+            terrainMultiplier = 0.75;
+        } else if (terrain == 3) {
+            terrainMultiplier = 0.85;
+        } else {
+            terrainMultiplier = 0.95;
         }
     }
 }
